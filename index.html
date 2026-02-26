@@ -3,8 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Посты из телеграм-канала адвоката Валерия Федорова</title>
+    <title>Telegram — adv_vfedorov</title>
     <style>
+        :root {
+            --bg: #f5f5f5;
+            --card-bg: #ffffff;
+            --text: #222222;
+            --text-secondary: #888888;
+            --accent: #2AABEE;
+            --accent-hover: #1d96d1;
+            --border: #e8e8e8;
+            --shadow: rgba(0, 0, 0, 0.06);
+            --mark-bg: #fff3cd;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -12,724 +24,735 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background-color: #f0f2f5;
-            color: #1a1a1a;
-            line-height: 1.6;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.65;
+            -webkit-font-smoothing: antialiased;
         }
 
+        /* ===== HEADER ===== */
         .header {
-            background: linear-gradient(135deg, #2AABEE, #229ED9);
-            color: white;
-            padding: 30px 20px;
+            background: linear-gradient(135deg, #2AABEE 0%, #1b8ec7 100%);
+            color: #fff;
+            padding: 28px 20px 24px;
             text-align: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 1000;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .header-inner {
+            max-width: 680px;
+            margin: 0 auto;
         }
 
         .header h1 {
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 5px;
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            letter-spacing: -0.3px;
         }
 
-        .header p {
-            font-size: 14px;
-            opacity: 0.9;
-        }
-
-        .header a {
-            color: white;
-            text-decoration: none;
-            border-bottom: 1px dashed rgba(255,255,255,0.5);
-        }
-
-        .header a:hover {
-            border-bottom-color: white;
-        }
-
-        .container {
-            max-width: 700px;
-            margin: 0 auto;
-            padding: 20px 15px;
-        }
-
-        .controls {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .search-box {
-            flex: 1;
-            min-width: 200px;
-            padding: 10px 15px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            font-size: 14px;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-
-        .search-box:focus {
-            border-color: #2AABEE;
-            box-shadow: 0 0 0 3px rgba(42, 171, 238, 0.1);
-        }
-
-        .post-count {
+        .header-sub {
             font-size: 13px;
-            color: #888;
+            opacity: 0.85;
+        }
+
+        .header-sub a {
+            color: #fff;
+            text-decoration: underline;
+            text-decoration-style: dashed;
+            text-underline-offset: 3px;
+        }
+
+        /* ===== CONTAINER ===== */
+        .container {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 16px 12px 40px;
+        }
+
+        /* ===== SEARCH ===== */
+        .toolbar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 180px;
+            padding: 10px 14px;
+            font-size: 14px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            outline: none;
+            background: var(--card-bg);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(42, 171, 238, 0.12);
+        }
+
+        .counter {
+            font-size: 12px;
+            color: var(--text-secondary);
             white-space: nowrap;
         }
 
-        .loading {
+        /* ===== LOADING / ERROR ===== */
+        .status-box {
             text-align: center;
             padding: 60px 20px;
         }
 
-        .loading .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid #e0e0e0;
-            border-top-color: #2AABEE;
+        .spinner {
+            width: 36px;
+            height: 36px;
+            border: 3.5px solid var(--border);
+            border-top-color: var(--accent);
             border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin: 0 auto 15px;
+            animation: spin 0.7s linear infinite;
+            margin: 0 auto 14px;
         }
 
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
 
-        .loading p {
-            color: #888;
-            font-size: 15px;
-        }
-
-        .error {
-            text-align: center;
-            padding: 40px 20px;
-            color: #e74c3c;
-        }
-
-        .error button {
-            margin-top: 15px;
-            padding: 10px 25px;
-            background: #2AABEE;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
+        .status-box p {
+            color: var(--text-secondary);
             font-size: 14px;
         }
 
-        .post-card {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 15px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-            transition: box-shadow 0.2s;
+        .status-box .err {
+            color: #d9534f;
         }
 
-        .post-card:hover {
-            box-shadow: 0 3px 12px rgba(0,0,0,0.12);
+        .retry-btn {
+            margin-top: 14px;
+            padding: 9px 24px;
+            font-size: 14px;
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .retry-btn:hover {
+            background: var(--accent-hover);
+        }
+
+        /* ===== POST CARD ===== */
+        .post {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 18px 20px;
+            margin-bottom: 12px;
+            box-shadow: 0 1px 4px var(--shadow);
+            transition: box-shadow 0.2s;
+            overflow-wrap: break-word;
+            word-break: break-word;
+        }
+
+        .post:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.09);
+        }
+
+        .post-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
         }
 
         .post-date {
             font-size: 12px;
-            color: #999;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            color: var(--text-secondary);
         }
 
-        .post-date a {
-            color: #2AABEE;
-            text-decoration: none;
+        .post-link {
             font-size: 12px;
-        }
-
-        .post-date a:hover {
-            text-decoration: underline;
-        }
-
-        .post-text {
-            font-size: 15px;
-            line-height: 1.7;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-        }
-
-        .post-text a {
-            color: #2AABEE;
+            color: var(--accent);
             text-decoration: none;
         }
 
-        .post-text a:hover {
+        .post-link:hover {
             text-decoration: underline;
         }
 
-        .post-text b, .post-text strong {
+        /* text */
+        .post-body {
+            font-size: 15px;
+            line-height: 1.72;
+        }
+
+        .post-body a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .post-body a:hover {
+            text-decoration: underline;
+        }
+
+        .post-body b,
+        .post-body strong {
             font-weight: 600;
         }
 
-        .post-text blockquote {
-            border-left: 3px solid #2AABEE;
-            margin: 10px 0;
-            padding: 5px 15px;
+        .post-body i,
+        .post-body em {
+            font-style: italic;
+        }
+
+        .post-body blockquote {
+            border-left: 3px solid var(--accent);
+            margin: 8px 0;
+            padding: 4px 14px;
             background: #f8f9fa;
             border-radius: 0 8px 8px 0;
         }
 
-        .post-text pre, .post-text code {
+        .post-body pre {
             background: #f4f4f4;
-            padding: 2px 6px;
-            border-radius: 4px;
+            padding: 10px 14px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-size: 13px;
+            margin: 8px 0;
+        }
+
+        .post-body code {
+            background: #f0f0f0;
+            padding: 1px 5px;
+            border-radius: 3px;
             font-size: 13px;
         }
 
-        .post-text pre {
-            padding: 12px;
-            overflow-x: auto;
-            margin: 10px 0;
+        .post-body br + br {
+            display: block;
+            content: "";
+            margin-top: 6px;
         }
 
+        /* media */
         .post-media {
             margin-top: 12px;
             border-radius: 8px;
             overflow: hidden;
+            line-height: 0;
+        }
+
+        .post-media img,
+        .post-media video {
+            width: 100%;
+            border-radius: 8px;
+            display: block;
         }
 
         .post-media img {
-            width: 100%;
-            display: block;
-            border-radius: 8px;
+            cursor: pointer;
         }
 
-        .post-media video {
-            width: 100%;
-            display: block;
-            border-radius: 8px;
-        }
-
-        .post-views {
-            font-size: 12px;
-            color: #bbb;
-            margin-top: 10px;
+        /* views */
+        .post-footer {
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 5px;
+            margin-top: 10px;
+            font-size: 12px;
+            color: #bbb;
         }
 
-        .post-views svg {
+        .post-footer svg {
             width: 14px;
             height: 14px;
             fill: #bbb;
         }
 
-        .load-more {
+        /* ===== LOAD MORE ===== */
+        .load-more-btn {
             display: block;
             width: 100%;
-            padding: 14px;
-            background: white;
-            border: 1px solid #e0e0e0;
+            padding: 13px;
+            margin-top: 4px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: var(--accent);
+            background: var(--card-bg);
+            border: 1px solid var(--border);
             border-radius: 10px;
-            font-size: 15px;
-            color: #2AABEE;
             cursor: pointer;
             transition: all 0.2s;
-            margin-bottom: 30px;
         }
 
-        .load-more:hover {
-            background: #2AABEE;
-            color: white;
-            border-color: #2AABEE;
+        .load-more-btn:hover {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
         }
 
-        .load-more:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
+        .load-more-btn:disabled {
+            opacity: 0.45;
+            cursor: default;
         }
 
+        /* ===== NO RESULTS ===== */
         .no-results {
             text-align: center;
-            padding: 40px;
-            color: #999;
-            font-size: 15px;
+            padding: 40px 20px;
+            color: var(--text-secondary);
         }
 
-        .footer {
-            text-align: center;
-            padding: 20px;
-            color: #aaa;
-            font-size: 12px;
-        }
-
-        .footer a {
-            color: #2AABEE;
-            text-decoration: none;
-        }
-
-        /* Стили для форматирования текста */
-        .post-text .tg-spoiler {
-            background: #333;
-            color: #333;
-            border-radius: 4px;
-            padding: 0 4px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .post-text .tg-spoiler.revealed {
-            background: transparent;
-            color: inherit;
-        }
-
-        .hashtag {
-            color: #2AABEE;
-            font-weight: 500;
-        }
-
-        /* Скролл наверх */
+        /* ===== SCROLL TOP ===== */
         .scroll-top {
             position: fixed;
-            bottom: 25px;
-            right: 25px;
-            width: 45px;
-            height: 45px;
-            background: #2AABEE;
-            color: white;
+            bottom: 24px;
+            right: 24px;
+            width: 44px;
+            height: 44px;
+            background: var(--accent);
+            color: #fff;
             border: none;
             border-radius: 50%;
             font-size: 20px;
             cursor: pointer;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .scroll-top.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* ===== LIGHTBOX ===== */
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.88);
+            z-index: 9999;
             display: none;
             align-items: center;
             justify-content: center;
-            transition: opacity 0.3s;
-            z-index: 99;
+            cursor: zoom-out;
         }
 
-        .scroll-top.visible {
+        .lightbox.open {
             display: flex;
         }
 
-        @media (max-width: 480px) {
-            .header {
-                padding: 20px 15px;
-            }
+        .lightbox img {
+            max-width: 94vw;
+            max-height: 94vh;
+            border-radius: 6px;
+        }
 
-            .header h1 {
-                font-size: 20px;
-            }
+        /* ===== FOOTER ===== */
+        .footer {
+            text-align: center;
+            padding: 10px 20px 30px;
+            font-size: 11px;
+            color: #bbb;
+        }
 
-            .post-card {
-                padding: 15px;
-                border-radius: 10px;
-            }
+        .footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
 
-            .container {
-                padding: 15px 10px;
-            }
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 520px) {
+            .header { padding: 20px 14px 18px; }
+            .header h1 { font-size: 19px; }
+            .post { padding: 14px 15px; border-radius: 10px; }
+            .container { padding: 12px 8px 30px; }
         }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h1>📢Адвокат Валерий Федоров</h1>
-        <p>Посты из Telegram-канала <a href="https://t.me/adv_vfedorov" target="_blank">@adv_vfedorov</a></p>
+<!-- HEADER -->
+<div class="header">
+    <div class="header-inner">
+        <h1>📢 adv_vfedorov</h1>
+        <div class="header-sub">
+            Посты из Telegram-канала
+            <a href="https://t.me/adv_vfedorov" target="_blank" rel="noopener">@adv_vfedorov</a>
+        </div>
+    </div>
+</div>
+
+<!-- MAIN -->
+<div class="container">
+    <div class="toolbar">
+        <input class="search-input" id="search" type="text" placeholder="🔍 Поиск по постам…">
+        <span class="counter" id="counter"></span>
     </div>
 
-    <div class="container">
-        <div class="controls">
-            <input type="text" class="search-box" id="searchBox" placeholder="🔍 Поиск по постам...">
-            <span class="post-count" id="postCount"></span>
+    <div id="feed">
+        <div class="status-box" id="loader">
+            <div class="spinner"></div>
+            <p>Загрузка постов…</p>
         </div>
+    </div>
 
-        <div id="postsContainer">
-            <div class="loading" id="loadingIndicator">
-                <div class="spinner"></div>
-                <p>Загрузка постов...</p>
+    <button class="load-more-btn" id="moreBtn" style="display:none" onclick="showMore()">Показать ещё</button>
+</div>
+
+<!-- SCROLL-TOP -->
+<button class="scroll-top" id="scrollBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="this.classList.remove('open')">
+    <img id="lightboxImg" src="" alt="">
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+    Источник: <a href="https://t.me/adv_vfedorov" target="_blank">t.me/adv_vfedorov</a>
+</div>
+
+<script>
+(function () {
+    'use strict';
+
+    /* ── config ── */
+    const CHANNEL   = 'adv_vfedorov';
+    const PAGE_SIZE = 20;
+
+    /* ── state ── */
+    let allPosts     = [];
+    let filtered     = [];
+    let shown        = 0;
+    let searchQuery  = '';
+
+    /* ── DOM refs ── */
+    const $feed    = document.getElementById('feed');
+    const $loader  = document.getElementById('loader');
+    const $counter = document.getElementById('counter');
+    const $more    = document.getElementById('moreBtn');
+    const $search  = document.getElementById('search');
+    const $scroll  = document.getElementById('scrollBtn');
+    const $lb      = document.getElementById('lightbox');
+    const $lbImg   = document.getElementById('lightboxImg');
+
+    /* ── CORS proxies (same approach as the reference site) ── */
+    const proxies = [
+        u => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u),
+        u => 'https://corsproxy.io/?' + encodeURIComponent(u),
+        u => 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(u),
+        u => 'https://crossorigin.me/' + u,
+    ];
+
+    /* ── fetch with fallback ── */
+    async function grab(url, timeout = 12000) {
+        for (const px of proxies) {
+            try {
+                const r = await fetch(px(url), { signal: AbortSignal.timeout(timeout) });
+                if (r.ok) {
+                    const t = await r.text();
+                    if (t && t.length > 200) return t;
+                }
+            } catch (_) { /* next */ }
+        }
+        throw new Error('all proxies failed');
+    }
+
+    /* ── parse t.me/s/ HTML ── */
+    function parseHTML(html) {
+        const doc  = new DOMParser().parseFromString(html, 'text/html');
+        const msgs = doc.querySelectorAll('.tgme_widget_message_wrap');
+        const out  = [];
+
+        msgs.forEach(wrap => {
+            const bubble = wrap.querySelector('.tgme_widget_message_bubble');
+            if (!bubble) return;
+
+            /* text */
+            const textEl = bubble.querySelector('.tgme_widget_message_text');
+            let text = textEl ? textEl.innerHTML.trim() : '';
+
+            /* date */
+            const timeEl = bubble.querySelector('time[datetime]');
+            const dt = timeEl ? new Date(timeEl.getAttribute('datetime')) : null;
+
+            /* link */
+            const linkEl = bubble.querySelector('a.tgme_widget_message_date');
+            const link = linkEl ? linkEl.getAttribute('href') : '';
+
+            /* views */
+            const viewsEl = bubble.querySelector('.tgme_widget_message_views');
+            const views = viewsEl ? viewsEl.textContent.trim() : '';
+
+            /* photo */
+            let photoUrl = '';
+            const photoWrap = bubble.querySelector('.tgme_widget_message_photo_wrap');
+            if (photoWrap) {
+                const st = photoWrap.getAttribute('style') || '';
+                const m  = st.match(/url\(['"]?(.*?)['"]?\)/);
+                if (m) photoUrl = m[1];
+            }
+
+            /* video */
+            let videoUrl = '';
+            const videoEl = bubble.querySelector('video');
+            if (videoEl) videoUrl = videoEl.getAttribute('src') || '';
+
+            /* round video / voice — skip if completely empty */
+            if (!text && !photoUrl && !videoUrl) return;
+
+            const msgEl = wrap.querySelector('.tgme_widget_message');
+            const dataPost = msgEl ? msgEl.getAttribute('data-post') : '';
+            const postId = dataPost ? dataPost.split('/').pop() : '';
+
+            out.push({ text, date: dt, link, views, photoUrl, videoUrl, id: postId });
+        });
+
+        return out;
+    }
+
+    /* ── load ALL posts by scrolling back ── */
+    async function loadAllPosts() {
+        let url = `https://t.me/s/${CHANNEL}`;
+        let allLoaded = [];
+        let seenIds = new Set();
+        let attempts = 0;
+        const MAX_ATTEMPTS = 200;        // safety limit
+
+        // First load — latest posts
+        let html = await grab(url);
+        let posts = parseHTML(html);
+
+        posts.forEach(p => {
+            if (p.id && !seenIds.has(p.id)) {
+                seenIds.add(p.id);
+                allLoaded.push(p);
+            }
+        });
+
+        // Walk backwards using "before" parameter
+        while (attempts < MAX_ATTEMPTS) {
+            attempts++;
+            // find the smallest id we have
+            const ids = allLoaded.map(p => parseInt(p.id)).filter(n => !isNaN(n) && n > 0);
+            if (ids.length === 0) break;
+            const minId = Math.min(...ids);
+            if (minId <= 1) break;
+
+            const olderUrl = `https://t.me/s/${CHANNEL}?before=${minId}`;
+            try {
+                html = await grab(olderUrl, 15000);
+            } catch (_) {
+                break;
+            }
+
+            posts = parseHTML(html);
+            if (posts.length === 0) break;
+
+            let added = 0;
+            posts.forEach(p => {
+                if (p.id && !seenIds.has(p.id)) {
+                    seenIds.add(p.id);
+                    allLoaded.push(p);
+                    added++;
+                }
+            });
+
+            if (added === 0) break;
+
+            // update loading indicator
+            $loader.querySelector('p').textContent = `Загружено ${allLoaded.length} постов…`;
+        }
+
+        // sort newest first
+        allLoaded.sort((a, b) => {
+            const ia = parseInt(a.id) || 0;
+            const ib = parseInt(b.id) || 0;
+            return ib - ia;
+        });
+
+        return allLoaded;
+    }
+
+    /* ── render helpers ── */
+    function fmtDate(d) {
+        if (!d || isNaN(d)) return '';
+        return d.toLocaleDateString('ru-RU', {
+            day: 'numeric', month: 'long', year: 'numeric',
+            hour: '2-digit', minute: '2-digit'
+        });
+    }
+
+    function highlight(html, q) {
+        if (!q) return html;
+        // We highlight only in visible text, not inside tags
+        const esc = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const re  = new RegExp(`(${esc})`, 'gi');
+        // split by tags, highlight only text parts
+        return html.replace(/>([^<]*)</g, (full, txt) => {
+            return '>' + txt.replace(re, '<mark style="background:var(--mark-bg);padding:0 2px;border-radius:2px">$1</mark>') + '<';
+        });
+    }
+
+    function buildCard(p) {
+        const card = document.createElement('div');
+        card.className = 'post';
+
+        let body = p.text;
+        if (searchQuery) body = highlight(body, searchQuery);
+
+        let media = '';
+        if (p.photoUrl) {
+            media = `<div class="post-media"><img src="${p.photoUrl}" alt="" loading="lazy" onclick="openLightbox(this.src)"></div>`;
+        } else if (p.videoUrl) {
+            media = `<div class="post-media"><video src="${p.videoUrl}" controls preload="none"></video></div>`;
+        }
+
+        let footer = '';
+        if (p.views) {
+            footer = `<div class="post-footer">
+                <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                ${p.views}
+            </div>`;
+        }
+
+        card.innerHTML = `
+            <div class="post-head">
+                <span class="post-date">${fmtDate(p.date)}</span>
+                ${p.link ? `<a class="post-link" href="${p.link}" target="_blank" rel="noopener">Открыть ↗</a>` : ''}
             </div>
-        </div>
+            ${body ? `<div class="post-body">${body}</div>` : ''}
+            ${media}
+            ${footer}
+        `;
+        return card;
+    }
 
-        <button class="load-more" id="loadMoreBtn" style="display:none;" onclick="loadMore()">
-            Загрузить ещё
-        </button>
-    </div>
+    /* ── rendering ── */
+    function applyFilter() {
+        const q = searchQuery.toLowerCase();
+        filtered = q
+            ? allPosts.filter(p => {
+                const plain = p.text.replace(/<[^>]*>/g, '').toLowerCase();
+                return plain.includes(q);
+            })
+            : [...allPosts];
 
-    <button class="scroll-top" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+        shown = 0;
+        $feed.innerHTML = '';
+        $counter.textContent = filtered.length + ' пост' + pluralRu(filtered.length);
 
-    <div class="footer">
-        Данные загружаются из <a href="https://t.me/adv_vfedorov" target="_blank">Telegram</a> через RSS
-    </div>
-
-    <script>
-        const CHANNEL = 'adv_vfedorov';
-        const RSS_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://rsshub.app/telegram/channel/${CHANNEL}`)}`;
-        const CORS_PROXIES = [
-            (url) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
-            (url) => `https://corsproxy.io/?${encodeURIComponent(url)}`,
-            (url) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
-        ];
-
-        const RSS_SOURCES = [
-            `https://rsshub.app/telegram/channel/${CHANNEL}`,
-            `https://rss.app/feeds/v1.1/telegram-${CHANNEL}.xml`, // fallback
-        ];
-
-        let allPosts = [];
-        let filteredPosts = [];
-        let displayedCount = 0;
-        const BATCH_SIZE = 20;
-
-        // Загрузка
-        async function fetchWithFallback() {
-           
-            // Стратегия 2: Парсинг t.me/s/ напрямую через прокси
-            for (const proxyFn of CORS_PROXIES) {
-                try {
-                    const url = proxyFn(`https://t.me/s/${CHANNEL}`);
-                    const response = await fetch(url, { signal: AbortSignal.timeout(10000) });
-                    if (response.ok) {
-                        const html = await response.text();
-                        if (html.includes('tgme_widget_message')) {
-                            return { type: 'html', data: html };
-                        }
-                    }
-                } catch (e) {
-                    console.log('HTML proxy failed, trying next...');
-                }
-            }
-
-            throw new Error('All sources failed');
+        if (filtered.length === 0) {
+            $feed.innerHTML = '<div class="no-results">Ничего не найдено</div>';
+            $more.style.display = 'none';
+            return;
         }
 
-        function parseRSS(xmlText) {
-            const parser = new DOMParser();
-            const xml = parser.parseFromString(xmlText, 'text/xml');
-            const items = xml.querySelectorAll('item');
-            const posts = [];
+        appendBatch();
+    }
 
-            items.forEach(item => {
-                const title = item.querySelector('title')?.textContent || '';
-                const description = item.querySelector('description')?.textContent || '';
-                const link = item.querySelector('link')?.textContent || '';
-                const pubDate = item.querySelector('pubDate')?.textContent || '';
-
-                const content = description || title;
-                if (!content.trim()) return;
-
-                posts.push({
-                    text: content,
-                    date: pubDate ? new Date(pubDate) : new Date(),
-                    link: link,
-                    id: link.split('/').pop() || Math.random().toString()
-                });
-            });
-
-            return posts;
+    function appendBatch() {
+        const end = Math.min(shown + PAGE_SIZE, filtered.length);
+        for (let i = shown; i < end; i++) {
+            $feed.appendChild(buildCard(filtered[i]));
         }
-
-        function parseTelegramHTML(html) {
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, 'text/html');
-            const messages = doc.querySelectorAll('.tgme_widget_message');
-            const posts = [];
-
-            messages.forEach(msg => {
-                const textEl = msg.querySelector('.tgme_widget_message_text');
-                const dateEl = msg.querySelector('.tgme_widget_message_date time');
-                const linkEl = msg.querySelector('.tgme_widget_message_date');
-                const viewsEl = msg.querySelector('.tgme_widget_message_views');
-                const photoEl = msg.querySelector('.tgme_widget_message_photo_wrap');
-                const videoEl = msg.querySelector('video');
-
-                let text = '';
-                if (textEl) {
-                    text = textEl.innerHTML;
-                }
-
-                let mediaUrl = '';
-                let mediaType = '';
-                if (photoEl) {
-                    const style = photoEl.getAttribute('style') || '';
-                    const match = style.match(/url\(['"]?(.*?)['"]?\)/);
-                    if (match) {
-                        mediaUrl = match[1];
-                        mediaType = 'image';
-                    }
-                }
-                if (videoEl) {
-                    mediaUrl = videoEl.getAttribute('src') || '';
-                    mediaType = 'video';
-                }
-
-                const dateStr = dateEl ? dateEl.getAttribute('datetime') : '';
-                const link = linkEl ? linkEl.getAttribute('href') : '';
-                const views = viewsEl ? viewsEl.textContent.trim() : '';
-
-                if (!text && !mediaUrl) return;
-
-                posts.push({
-                    text: text,
-                    date: dateStr ? new Date(dateStr) : new Date(),
-                    link: link || `https://t.me/${CHANNEL}`,
-                    views: views,
-                    mediaUrl: mediaUrl,
-                    mediaType: mediaType,
-                    id: link ? link.split('/').pop() : Math.random().toString()
-                });
-            });
-
-            return posts.reverse(); // от старых к новым, потом перевернём
+        shown = end;
+        if (shown < filtered.length) {
+            $more.style.display = 'block';
+            $more.textContent = `Показать ещё (осталось ${filtered.length - shown})`;
+        } else {
+            $more.style.display = 'none';
         }
+    }
 
-        function formatDate(date) {
-            if (!(date instanceof Date) || isNaN(date)) return '';
-            const options = {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            };
-            return date.toLocaleDateString('ru-RU', options);
-        }
+    function pluralRu(n) {
+        const m = n % 100;
+        if (m >= 11 && m <= 19) return 'ов';
+        const l = n % 10;
+        if (l === 1) return '';
+        if (l >= 2 && l <= 4) return 'а';
+        return 'ов';
+    }
 
-        function sanitizeHTML(html) {
-            // Разрешаем базовые теги
-            const tmp = document.createElement('div');
-            tmp.innerHTML = html;
+    /* ── public ── */
+    window.showMore = appendBatch;
 
-            // Удаляем скрипты
-            tmp.querySelectorAll('script, style, iframe, object, embed').forEach(el => el.remove());
+    window.openLightbox = function (src) {
+        $lbImg.src = src;
+        $lb.classList.add('open');
+    };
 
-            return tmp.innerHTML;
-        }
+    /* ── search ── */
+    let debounce;
+    $search.addEventListener('input', () => {
+        clearTimeout(debounce);
+        debounce = setTimeout(() => {
+            searchQuery = $search.value.trim();
+            applyFilter();
+        }, 250);
+    });
 
-        function highlightSearch(text, query) {
-            if (!query) return text;
-            const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-            const regex = new RegExp(`(${escaped})`, 'gi');
-            return text.replace(regex, '<mark style="background:#fff3cd;padding:1px 2px;border-radius:2px;">$1</mark>');
-        }
+    /* ── scroll-top button ── */
+    window.addEventListener('scroll', () => {
+        $scroll.classList.toggle('show', window.scrollY > 600);
+    }, { passive: true });
 
-        function renderPost(post, searchQuery) {
-            const card = document.createElement('div');
-            card.className = 'post-card';
+    /* ── ESC closes lightbox ── */
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') $lb.classList.remove('open');
+    });
 
-            let textContent = sanitizeHTML(post.text);
-            if (searchQuery) {
-                textContent = highlightSearch(textContent, searchQuery);
-            }
+    /* ── error UI ── */
+    function showError(msg) {
+        $feed.innerHTML = `
+            <div class="status-box">
+                <p class="err">😔 ${msg}</p>
+                <p style="margin-top:6px;font-size:13px;color:#999">Попробуйте обновить страницу</p>
+                <button class="retry-btn" onclick="location.reload()">Повторить</button>
+                <p style="margin-top:14px">
+                    <a href="https://t.me/${CHANNEL}" target="_blank" style="color:var(--accent);font-size:13px">
+                        Открыть канал в Telegram →
+                    </a>
+                </p>
+            </div>`;
+    }
 
-            // Подсветка хештегов
-            textContent = textContent.replace(/(#\w+)/g, '<span class="hashtag">$1</span>');
+    /* ── INIT ── */
+    async function init() {
+        try {
+            allPosts = await loadAllPosts();
+            $loader.remove();
 
-            let mediaHTML = '';
-            if (post.mediaUrl && post.mediaType === 'image') {
-                mediaHTML = `<div class="post-media"><img src="${post.mediaUrl}" alt="Фото" loading="lazy" onerror="this.parentElement.style.display='none'"></div>`;
-            } else if (post.mediaUrl && post.mediaType === 'video') {
-                mediaHTML = `<div class="post-media"><video src="${post.mediaUrl}" controls preload="none"></video></div>`;
-            }
-
-            let viewsHTML = '';
-            if (post.views) {
-                viewsHTML = `<div class="post-views">
-                    <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
-                    ${post.views}
-                </div>`;
-            }
-
-            card.innerHTML = `
-                <div class="post-date">
-                    <span>${formatDate(post.date)}</span>
-                    <a href="${post.link}" target="_blank" rel="noopener">Открыть в Telegram →</a>
-                </div>
-                <div class="post-text">${textContent}</div>
-                ${mediaHTML}
-                ${viewsHTML}
-            `;
-
-            return card;
-        }
-
-        function renderPosts(searchQuery = '') {
-            const container = document.getElementById('postsContainer');
-            container.innerHTML = '';
-            displayedCount = 0;
-
-            if (searchQuery) {
-                const q = searchQuery.toLowerCase();
-                filteredPosts = allPosts.filter(post => {
-                    const plainText = post.text.replace(/<[^>]*>/g, '').toLowerCase();
-                    return plainText.includes(q);
-                });
-            } else {
-                filteredPosts = [...allPosts];
-            }
-
-            document.getElementById('postCount').textContent = `${filteredPosts.length} постов`;
-
-            if (filteredPosts.length === 0) {
-                container.innerHTML = '<div class="no-results">Ничего не найдено 😕</div>';
-                document.getElementById('loadMoreBtn').style.display = 'none';
+            if (allPosts.length === 0) {
+                showError('Не удалось загрузить посты');
                 return;
             }
 
-            showBatch(searchQuery);
+            applyFilter();
+        } catch (err) {
+            console.error(err);
+            $loader.remove();
+            showError('Ошибка загрузки: ' + err.message);
         }
+    }
 
-        function showBatch(searchQuery = '') {
-            const container = document.getElementById('postsContainer');
-            const end = Math.min(displayedCount + BATCH_SIZE, filteredPosts.length);
-
-            for (let i = displayedCount; i < end; i++) {
-                container.appendChild(renderPost(filteredPosts[i], searchQuery));
-            }
-
-            displayedCount = end;
-
-            const loadMoreBtn = document.getElementById('loadMoreBtn');
-            if (displayedCount < filteredPosts.length) {
-                loadMoreBtn.style.display = 'block';
-                loadMoreBtn.textContent = `Загрузить ещё (${filteredPosts.length - displayedCount} осталось)`;
-            } else {
-                loadMoreBtn.style.display = 'none';
-            }
-        }
-
-        function loadMore() {
-            const searchQuery = document.getElementById('searchBox').value.trim();
-            showBatch(searchQuery);
-        }
-
-        function showError(message) {
-            const container = document.getElementById('postsContainer');
-            container.innerHTML = `
-                <div class="error">
-                    <p>😔 ${message}</p>
-                    <p style="font-size:13px;color:#999;margin-top:8px;">Попробуйте обновить страницу или зайти позже</p>
-                    <button onclick="location.reload()">Попробовать снова</button>
-                    <p style="margin-top:15px;font-size:13px;">
-                        <a href="https://t.me/adv_vfedorov" target="_blank" style="color:#2AABEE;">
-                            Открыть канал в Telegram →
-                        </a>
-                    </p>
-                </div>
-            `;
-        }
-
-        // Инициализация
-        async function init() {
-            try {
-                const result = await fetchWithFallback();
-
-                if (result && typeof result === 'object' && result.type === 'html') {
-                    allPosts = parseTelegramHTML(result.data);
-                } else if (typeof result === 'string') {
-                    allPosts = parseRSS(result);
-                }
-
-                // Сортировка: новые сверху
-                allPosts.sort((a, b) => b.date - a.date);
-
-                document.getElementById('loadingIndicator').style.display = 'none';
-
-                if (allPosts.length === 0) {
-                    showError('Не удалось загрузить посты');
-                    return;
-                }
-
-                renderPosts();
-
-            } catch (error) {
-                console.error('Init error:', error);
-                document.getElementById('loadingIndicator').style.display = 'none';
-
-                // Fallback: встраиваем виджет Telegram
-                showTelegramWidget();
-            }
-        }
-
-        function showTelegramWidget() {
-            const container = document.getElementById('postsContainer');
-            container.innerHTML = `
-                <div style="text-align:center; padding: 20px 0;">
-                    <p style="color:#666; margin-bottom:20px; font-size:14px;">
-                        Автоматическая загрузка недоступна. Отображаем встроенный виджет Telegram:
-                    </p>
-                </div>
-                <div id="widgetPosts" style="max-width:100%;"></div>
-            `;
-
-            // Загружаем последние 20 постов через виджет
-            for (let i = 0; i < 20; i++) {
-                const wrapper = document.createElement('div');
-                wrapper.style.marginBottom = '10px';
-                wrapper.innerHTML = `
-                    <script async src="https://telegram.org/js/telegram-widget.js?22"
-                        data-telegram-post="${CHANNEL}/${getLatestPostId() - i}"
-                        data-width="100%"
-                        data-color="2AABEE"
-                        data-dark-color="72BCFD">
-                    <\/script>
-                `;
-                document.getElementById('widgetPosts').appendChild(wrapper);
-            }
-
-            // Альтернатива: один виджет с обсуждением
-            const altWidget = document.createElement('script');
-            altWidget.src = 'https://telegram.org/js/telegram-widget.js?22';
-            altWidget.setAttribute('data-telegram-post', `${CHANNEL}/999999`);
-            altWidget.setAttribute('data-width', '100%');
-            altWidget.async = true;
-        }
-
-        function getLatestPostId() {
-            // Примерный ID последнего поста — будет обновляться
-            return 500;
-        }
-
-        // Поиск с debounce
-        let searchTimeout;
-        document.getElementById('searchBox').addEventListener('input', (e) => {
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(() => {
-                renderPosts(e.target.value.trim());
-            }, 300);
-        });
-
-        // Кнопка "наверх"
-        window.addEventListener('scroll', () => {
-            const btn = document.getElementById('scrollTopBtn');
-            if (window.scrollY > 500) {
-                btn.classList.add('visible');
-            } else {
-                btn.classList.remove('visible');
-            }
-        });
-
-        // Спойлеры
-        document.addEventListener('click', (e) => {
-            if (e.target.classList.contains('tg-spoiler')) {
-                e.target.classList.toggle('revealed');
-            }
-        });
-
-        // Запуск
-        init();
-    </script>
+    init();
+})();
+</script>
 </body>
 </html>
